@@ -45,3 +45,22 @@ func (o *OriginalService) ImportDocument(bodyParams *ImportDocumentBodyParams) (
 		Receive(response, apiError)
 	return response, resp, relevantError(err, *apiError)
 }
+
+type ListOriginalsResponse struct {
+	Count int64          `json:"count"`
+	Files []FileMetadata `json:"files"`
+}
+
+type FileMetadata struct {
+	CreatedTime      int64  `json:"created_time"`
+	ID               int64  `json:"id"`
+	LastModifiedTime int64  `json:"last_modified_time"`
+	Name             string `json:"name"`
+}
+
+func (o *OriginalService) ListOriginals() (*ListOriginalsResponse, *http.Response, error) {
+	lor := new(ListOriginalsResponse)
+	apiError := new(APIError)
+	httpResp, httpErr := o.hsend.New().Get("").Receive(lor, apiError)
+	return lor, httpResp, relevantError(httpErr, *apiError)
+}

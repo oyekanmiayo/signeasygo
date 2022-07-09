@@ -73,6 +73,12 @@ func (h *HSend) Doer(doer Doer) *HSend {
 
 // Method
 
+// Get sets the Sling method to GET and sets the given pathURL.
+func (h *HSend) Get(pathURL string) *HSend {
+	h.method = "GET"
+	return h.Path(pathURL)
+}
+
 // Post sets the Sling method to POST and sets the given pathURL.
 func (h *HSend) Post(pathURL string) *HSend {
 	h.method = "POST"

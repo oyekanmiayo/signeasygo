@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"log"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -14,16 +13,10 @@ import (
 )
 
 func main() {
-	flags := flag.NewFlagSet("flags", flag.ExitOnError)
-	accessToken := flags.String("access-token", "", "Access Token")
-	filePath := flags.String("file-path", "", "File Path")
-	name := flags.String("name", "", "Name. Must have extension.")
-	rename := flags.String("rename", "true", "Rename if exists")
-
-	err := flags.Parse(os.Args[1:])
-	if err != nil {
-		log.Fatalf("error: %v", err)
-	}
+	accessToken := flag.String("token", "", "Access Token")
+	filePath := flag.String("file", "", "File Path")
+	name := flag.String("name", "", "Name. Must have extension.")
+	rename := flag.String("rename", "true", "Rename if exists")
 
 	payload := &bytes.Buffer{}
 	writer := multipart.NewWriter(payload)
@@ -39,7 +32,7 @@ func main() {
 	}
 	_ = writer.WriteField("name", *name)
 	_ = writer.WriteField("rename_if_exists", *rename)
-	err = writer.Close()
+	err := writer.Close()
 	if err != nil {
 		fmt.Println(err)
 		return
