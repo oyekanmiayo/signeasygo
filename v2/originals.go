@@ -47,11 +47,12 @@ func (o *OriginalService) ImportDocument(bodyParams *ImportDocumentBodyParams) (
 }
 
 type ListOriginalsResponse struct {
-	Count int64          `json:"count"`
-	Files []FileMetadata `json:"files"`
+	Count int64      `json:"count"`
+	Files []Original `json:"files"`
 }
 
-type FileMetadata struct {
+// Original is a struct containing metadata for an original (document)
+type Original struct {
 	CreatedTime      int64  `json:"created_time"`
 	ID               int64  `json:"id"`
 	LastModifiedTime int64  `json:"last_modified_time"`
