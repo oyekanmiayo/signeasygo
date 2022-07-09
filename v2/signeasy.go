@@ -9,6 +9,7 @@ const signeasyV2API = "https://api.signeasy.com/v2.1/"
 
 type Client struct {
 	Originals *OriginalService
+	Templates *TemplateService
 }
 
 func NewClient(client *http.Client, accessToken string) *Client {
@@ -17,5 +18,6 @@ func NewClient(client *http.Client, accessToken string) *Client {
 
 	return &Client{
 		Originals: newOriginalService(baseHSend.New()),
+		Templates: newTemplateService(baseHSend.New()),
 	}
 }
