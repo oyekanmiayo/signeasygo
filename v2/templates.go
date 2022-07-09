@@ -68,3 +68,10 @@ func (t *TemplateService) GetTemplate(id int32) (*Template, *http.Response, erro
 	resp, err := t.hsend.New().Get(fmt.Sprintf("%v", id)).Receive(template, apiError)
 	return template, resp, relevantError(err, *apiError)
 }
+
+func (t *TemplateService) DeleteTemplate(id int32) (*Template, *http.Response, error) {
+	template := new(Template)
+	apiError := new(APIError)
+	resp, err := t.hsend.New().Delete(fmt.Sprintf("%v", id)).Receive(template, apiError)
+	return template, resp, relevantError(err, *apiError)
+}
