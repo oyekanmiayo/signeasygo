@@ -1,6 +1,7 @@
 package v2
 
 import (
+	"fmt"
 	"net/http"
 	"signeasygo/hsend"
 )
@@ -59,4 +60,11 @@ func (t *TemplateService) ListTemplates() (*ListTemplateResponse, *http.Response
 	apiError := new(APIError)
 	resp, err := t.hsend.New().Get("").Receive(templates, apiError)
 	return templates, resp, relevantError(err, *apiError)
+}
+
+func (t *TemplateService) GetTemplate(id int32) (*Template, *http.Response, error) {
+	template := new(Template)
+	apiError := new(APIError)
+	resp, err := t.hsend.New().Get(fmt.Sprintf("%v", id)).Receive(template, apiError)
+	return template, resp, relevantError(err, *apiError)
 }
