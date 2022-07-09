@@ -2,6 +2,7 @@ package v2
 
 import (
 	"bytes"
+	"fmt"
 	"net/http"
 	"signeasygo/hsend"
 )
@@ -64,4 +65,12 @@ func (o *OriginalService) ListOriginals() (*ListOriginalsResponse, *http.Respons
 	apiError := new(APIError)
 	httpResp, httpErr := o.hsend.New().Get("").Receive(lor, apiError)
 	return lor, httpResp, relevantError(httpErr, *apiError)
+}
+
+func (o *OriginalService) GetOriginal(originalID int32) (*Original, *http.Response, error) {
+	original := new(Original)
+	apiError := new(APIError)
+	httpResp, httpErr := o.hsend.New().Get(fmt.Sprintf("%v/", originalID)).
+		Receive(original, apiError)
+	return original, httpResp, relevantError(httpErr, *apiError)
 }
