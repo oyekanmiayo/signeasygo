@@ -8,8 +8,9 @@ import (
 const signeasyV2API = "https://api.signeasy.com/v2.1/"
 
 type Client struct {
-	Originals *OriginalService
-	Templates *TemplateService
+	Originals        *OriginalService
+	Templates        *TemplateService
+	RequestSignature *RequestSignatureService
 }
 
 func NewClient(client *http.Client, accessToken string) *Client {
@@ -17,7 +18,8 @@ func NewClient(client *http.Client, accessToken string) *Client {
 	baseHSend.Add("Authorization", "Bearer "+accessToken)
 
 	return &Client{
-		Originals: newOriginalService(baseHSend.New()),
-		Templates: newTemplateService(baseHSend.New()),
+		Originals:        newOriginalService(baseHSend.New()),
+		Templates:        newTemplateService(baseHSend.New()),
+		RequestSignature: newRequestSignatureService(baseHSend.New()),
 	}
 }

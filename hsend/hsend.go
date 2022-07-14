@@ -152,6 +152,17 @@ func (h *HSend) BodyProvider(body BodyProvider) *HSend {
 	return h
 }
 
+// BodyJSON sets the HSend's bodyJSON. The value pointed to by the bodyJSON
+// will be JSON encoded as the Body on new requests (see Request()).
+// The bodyJSON argument should be a pointer to a JSON tagged struct. See
+// https://golang.org/pkg/encoding/json/#MarshalIndent for details.
+func (h *HSend) BodyJSON(bodyJSON interface{}) *HSend {
+	if bodyJSON == nil {
+		return h
+	}
+	return h.BodyProvider(jsonBodyProvider{payload: bodyJSON})
+}
+
 func (h *HSend) BodyMultiPartForm(bodyForm interface{}, contentType string) *HSend {
 	if bodyForm == nil {
 		return h

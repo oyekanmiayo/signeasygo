@@ -1,6 +1,8 @@
 package hsend
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -27,4 +29,21 @@ func (p multipartFormProvider) Body() (io.Reader, error) {
 		return pl, nil
 	}
 	return nil, errors.New(fmt.Sprintf("invalid payload: %v. should be of type io.Reader", p.payload))
+}
+
+type jsonBodyProvider struct {
+	payload interface{}
+}
+
+func (p jsonBodyProvider) ContentType() string {
+	return "application/json"
+}
+
+func (p jsonBodyProvider) Body() (io.Reader, error) {
+	buf := &bytes.Buffer{}
+	err := json.NewEncoder(buf).Encode(p.payload)
+	if err != nil {
+		return nil, err
+	}
+	return buf, nil
 }
