@@ -12,7 +12,7 @@ type SelfSignService struct {
 
 func newSelfSignService(hsend *hsend.HSend) *SelfSignService {
 	return &SelfSignService{
-		hsend: hsend.Path("me/"),
+		hsend: hsend.Path("me/signed/"),
 	}
 }
 
@@ -34,7 +34,9 @@ type FetchSelfSignURLResponse struct {
 func (e *SelfSignService) FetchSelfSignURL(bodyParams *FetchSelfSignURLBodyParam) (*FetchSelfSignURLResponse, *http.Response, error) {
 	response := new(FetchSelfSignURLResponse)
 	apiError := new(APIError)
-	httpResp, httpErr := e.hsend.New().Post("embedded/url/").BodyJSON(bodyParams).Receive(response, apiError)
+	specialEmbeddedSelfSignEndpoint := "me/embedded/url/"
+	httpResp, httpErr := e.hsend.New().Base(signeasyV2API).Post(specialEmbeddedSelfSignEndpoint).
+		BodyJSON(bodyParams).Receive(response, apiError)
 	return response, httpResp, relevantError(httpErr, *apiError)
 }
 
@@ -60,7 +62,7 @@ type SelfSignedFile struct {
 func (e *SelfSignService) FetchSelfSignedFiles() (*FetchSelfSignedFilesResponse, *http.Response, error) {
 	response := new(FetchSelfSignedFilesResponse)
 	apiError := new(APIError)
-	httpResp, httpErr := e.hsend.New().Get("signed/").Receive(response, apiError)
+	httpResp, httpErr := e.hsend.New().Get("").Receive(response, apiError)
 	return response, httpResp, relevantError(httpErr, *apiError)
 }
 
@@ -68,7 +70,7 @@ func (e *SelfSignService) FetchSelfSignedFiles() (*FetchSelfSignedFilesResponse,
 func (e *SelfSignService) FetchSelfSignedFile(signedID int32) (*SelfSignedFile, *http.Response, error) {
 	response := new(SelfSignedFile)
 	apiError := new(APIError)
-	httpResp, httpErr := e.hsend.New().Get(fmt.Sprintf("signed/%v", signedID)).
+	httpResp, httpErr := e.hsend.New().Get(fmt.Sprintf("%v", signedID)).
 		Receive(response, apiError)
 	return response, httpResp, relevantError(httpErr, *apiError)
 }
@@ -78,7 +80,7 @@ func (e *SelfSignService) FetchSelfSignedFile(signedID int32) (*SelfSignedFile, 
 func (e *SelfSignService) DownloadSelfSignedFile(signedID int32) (interface{}, *http.Response, error) {
 	var response interface{}
 	apiError := new(APIError)
-	httpResp, httpErr := e.hsend.New().Get(fmt.Sprintf("signed/%v/download", signedID)).
+	httpResp, httpErr := e.hsend.New().Get(fmt.Sprintf("%v/download", signedID)).
 		Receive(response, apiError)
 	return response, httpResp, relevantError(httpErr, *apiError)
 }
@@ -87,7 +89,7 @@ func (e *SelfSignService) DownloadSelfSignedFile(signedID int32) (interface{}, *
 func (e *SelfSignService) DownloadSelfSignedFileCertificate(signedID int32) (interface{}, *http.Response, error) {
 	var response interface{}
 	apiError := new(APIError)
-	httpResp, httpErr := e.hsend.New().Get(fmt.Sprintf("signed/%v/certificate", signedID)).
+	httpResp, httpErr := e.hsend.New().Get(fmt.Sprintf("%v/certificate", signedID)).
 		Receive(response, apiError)
 	return response, httpResp, relevantError(httpErr, *apiError)
 }
@@ -97,7 +99,7 @@ func (e *SelfSignService) DownloadSelfSignedFileCertificate(signedID int32) (int
 // The documentation mixes and matches :)
 func (e *SelfSignService) DeleteSelfSignedFile(signedID int32) (*http.Response, error) {
 	apiError := new(APIError)
-	httpResp, httpErr := e.hsend.New().Delete(fmt.Sprintf("signed/%v", signedID)).
+	httpResp, httpErr := e.hsend.New().Delete(fmt.Sprintf("%v", signedID)).
 		Receive(nil, apiError)
 	return httpResp, relevantError(httpErr, *apiError)
 }
