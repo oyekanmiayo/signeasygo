@@ -14,6 +14,6 @@ func main() {
 	flag.Parse()
 
 	client := signeasy.NewClient(http.DefaultClient, *accessToken)
-	response, httpResp, err := client.Originals.GetOriginal(43203078)
+	response, httpResp, err := client.Originals.FetchOriginalDetails(43203078)
 	fmt.Println("\n Resp: ", response, "\n httpResp: ", httpResp, "\n Error:", err)
 }

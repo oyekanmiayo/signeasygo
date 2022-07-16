@@ -67,10 +67,25 @@ func (o *OriginalService) ListOriginals() (*ListOriginalsResponse, *http.Respons
 	return lor, httpResp, relevantError(httpErr, *apiError)
 }
 
-func (o *OriginalService) GetOriginal(originalID int32) (*Original, *http.Response, error) {
+func (o *OriginalService) FetchOriginalDetails(originalID int32) (*Original, *http.Response, error) {
 	original := new(Original)
 	apiError := new(APIError)
 	httpResp, httpErr := o.hsend.New().Get(fmt.Sprintf("%v/", originalID)).
 		Receive(original, apiError)
 	return original, httpResp, relevantError(httpErr, *apiError)
+}
+
+func (o *OriginalService) DownloadOriginal(originalID int32) (interface{}, *http.Response, error) {
+	var original interface{}
+	apiError := new(APIError)
+	httpResp, httpErr := o.hsend.New().Get(fmt.Sprintf("%v/download", originalID)).
+		Receive(original, apiError)
+	return original, httpResp, relevantError(httpErr, *apiError)
+}
+
+func (o *OriginalService) DeleteOriginal(originalID int32) (*http.Response, error) {
+	apiError := new(APIError)
+	httpResp, httpErr := o.hsend.New().Delete(fmt.Sprintf("%v", originalID)).
+		Receive(nil, apiError)
+	return httpResp, relevantError(httpErr, *apiError)
 }
