@@ -6,12 +6,12 @@ import (
 	"signeasygo/hsend"
 )
 
-type SelfSignService struct {
+type EmbeddedSelfSignService struct {
 	hsend *hsend.HSend
 }
 
-func newSelfSignService(hsend *hsend.HSend) *SelfSignService {
-	return &SelfSignService{
+func newEmbeddedSelfSignService(hsend *hsend.HSend) *EmbeddedSelfSignService {
+	return &EmbeddedSelfSignService{
 		hsend: hsend.Path("me/signed/"),
 	}
 }
@@ -31,7 +31,7 @@ type FetchSelfSignURLResponse struct {
 }
 
 // FetchSelfSignURL is for https://docs.signeasy.com/reference/fetch-embedded-self-signing-url
-func (e *SelfSignService) FetchSelfSignURL(bodyParams *FetchSelfSignURLBodyParam) (*FetchSelfSignURLResponse, *http.Response, error) {
+func (e *EmbeddedSelfSignService) FetchSelfSignURL(bodyParams *FetchSelfSignURLBodyParam) (*FetchSelfSignURLResponse, *http.Response, error) {
 	response := new(FetchSelfSignURLResponse)
 	apiError := new(APIError)
 	specialEmbeddedSelfSignEndpoint := "me/embedded/url/"
@@ -59,7 +59,7 @@ type SelfSignedFile struct {
 }
 
 // FetchSelfSignedFiles is for https://docs.signeasy.com/reference/fetch-all-self-signed-files
-func (e *SelfSignService) FetchSelfSignedFiles() (*FetchSelfSignedFilesResponse, *http.Response, error) {
+func (e *EmbeddedSelfSignService) FetchSelfSignedFiles() (*FetchSelfSignedFilesResponse, *http.Response, error) {
 	response := new(FetchSelfSignedFilesResponse)
 	apiError := new(APIError)
 	httpResp, httpErr := e.hsend.New().Get("").Receive(response, apiError)
@@ -67,7 +67,7 @@ func (e *SelfSignService) FetchSelfSignedFiles() (*FetchSelfSignedFilesResponse,
 }
 
 // FetchSelfSignedFile is for https://docs.signeasy.com/reference/get-self-signed-document-details
-func (e *SelfSignService) FetchSelfSignedFile(signedID int32) (*SelfSignedFile, *http.Response, error) {
+func (e *EmbeddedSelfSignService) FetchSelfSignedFile(signedID int32) (*SelfSignedFile, *http.Response, error) {
 	response := new(SelfSignedFile)
 	apiError := new(APIError)
 	httpResp, httpErr := e.hsend.New().Get(fmt.Sprintf("%v", signedID)).
@@ -77,7 +77,7 @@ func (e *SelfSignService) FetchSelfSignedFile(signedID int32) (*SelfSignedFile, 
 
 // DownloadSelfSignedFile is for https://docs.signeasy.com/reference/download-self-signed-document
 // How do I download a pdf document? I need to test this and provide an example
-func (e *SelfSignService) DownloadSelfSignedFile(signedID int32) (interface{}, *http.Response, error) {
+func (e *EmbeddedSelfSignService) DownloadSelfSignedFile(signedID int32) (interface{}, *http.Response, error) {
 	var response interface{}
 	apiError := new(APIError)
 	httpResp, httpErr := e.hsend.New().Get(fmt.Sprintf("%v/download", signedID)).
@@ -86,7 +86,7 @@ func (e *SelfSignService) DownloadSelfSignedFile(signedID int32) (interface{}, *
 }
 
 // DownloadSelfSignedFileCertificate is for https://docs.signeasy.com/reference/download-certificate-of-self-signed-document
-func (e *SelfSignService) DownloadSelfSignedFileCertificate(signedID int32) (interface{}, *http.Response, error) {
+func (e *EmbeddedSelfSignService) DownloadSelfSignedFileCertificate(signedID int32) (interface{}, *http.Response, error) {
 	var response interface{}
 	apiError := new(APIError)
 	httpResp, httpErr := e.hsend.New().Get(fmt.Sprintf("%v/certificate", signedID)).
@@ -97,7 +97,7 @@ func (e *SelfSignService) DownloadSelfSignedFileCertificate(signedID int32) (int
 // DeleteSelfSignedFile is for https://docs.signeasy.com/reference/delete-self-signed-document
 // Random thought: I need consistent name throughout this lib. Should we use file or document everywhere?
 // The documentation mixes and matches :)
-func (e *SelfSignService) DeleteSelfSignedFile(signedID int32) (*http.Response, error) {
+func (e *EmbeddedSelfSignService) DeleteSelfSignedFile(signedID int32) (*http.Response, error) {
 	apiError := new(APIError)
 	httpResp, httpErr := e.hsend.New().Delete(fmt.Sprintf("%v", signedID)).
 		Receive(nil, apiError)
