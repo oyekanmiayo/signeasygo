@@ -1,11 +1,12 @@
-package v2
+package v3
 
 import (
 	"net/http"
 	"signeasygo/hsend"
 )
 
-const signeasyV2API = "https://api.signeasy.com/v2.1/"
+const signeasyV2API = "https://api.signeasy.com/v2.1/" /* Unstable */
+const signeasyV3API = "https://api.signeasy.com/v3/"   /* Stable */
 
 type Client struct {
 	Originals        *OriginalService
@@ -15,7 +16,7 @@ type Client struct {
 }
 
 func NewClient(client *http.Client, accessToken string) *Client {
-	baseHSend := hsend.New().Client(client).Base(signeasyV2API)
+	baseHSend := hsend.New().Client(client).Base(signeasyV3API)
 	baseHSend.Add("Authorization", "Bearer "+accessToken)
 
 	return &Client{
