@@ -13,6 +13,7 @@ type Client struct {
 	Templates        *TemplateService
 	RequestSignature *RequestSignatureService
 	Embedded         *EmbeddedSelfSignService
+	Users            *UserService
 }
 
 func NewClient(client *http.Client, accessToken string) *Client {
@@ -24,5 +25,6 @@ func NewClient(client *http.Client, accessToken string) *Client {
 		Templates:        newTemplateService(baseHSend.New()),
 		RequestSignature: newRequestSignatureService(baseHSend.New()),
 		Embedded:         newEmbeddedSelfSignService(baseHSend.New()),
+		Users:            newUserService(baseHSend.New()),
 	}
 }
